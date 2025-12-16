@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>IntelliCare HIS Dashboard</title>
+    <!-- Bootstrap CDN -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    />
+    <style>
+        /* ---------- THEME COLORS ---------- */
+        :root{
+            --bg-1: #06121a;   /* page background */
+            --bg-2: #07121b;   /* card background */
+            --panel: #0b1720;  /* inner panel */
+            --muted: #9ca3af;  /* placeholder / muted */
+            --text: #e6eef6;   /* main text */
+            --accent-green: #16a34a;
+            --accent-yellow: #f59e0b;
+            --accent-orange: #f97316;
+            --card-border: rgba(255,255,255,0.04);
+            --table-head: #0f1724;
+        }
+
+        /* ---------- BASE ---------- */
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, var(--bg-1), #040810 120%);
+            color: var(--text);
+        }
+
+        nav.navbar {
+            background: linear-gradient(90deg, rgba(4,8,16,0.95), rgba(8,12,20,0.95));
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            box-shadow: 0 2px 8px rgba(2,6,12,0.6);
+        }
+
+        .navbar-brand span { color: var(--accent-green); font-weight: 600; }
+
+        .container-fluid { padding: 24px; }
+        ::placeholder {
+        color: #9ca3af !important;
+        opacity: 1;
+    }
+    input::-webkit-input-placeholder { color: #9ca3af !important; }
+    input:-ms-input-placeholder { color: #9ca3af !important; }
+    input::-ms-input-placeholder { color: #9ca3af !important; }
+    input::placeholder { color: #9ca3af !important; }
+        /* ---------- CARDS ---------- */
+        .card {
+            background: var(--bg-2);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 6px 18px rgba(2,6,12,0.6);
+        }
+        .card .card-header {
+            background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            color: #cfe6f5;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .card h6 { color: #98a8b8; }
+
+        /* ---------- INPUTS ---------- */
+        input.form-control, textarea.form-control {
+            background: #ffffff;
+            color: #0b1220;
+            border-radius: 8px;
+            border: 1px solid rgba(15,23,42,0.2);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+
+        /* placeholder colors for all browsers */
+        ::placeholder { color: var(--muted) !important; opacity: 1; }
+        input::-webkit-input-placeholder { color: var(--muted) !important; }
+        input:-ms-input-placeholder { color: var(--muted) !important; }
+        input::-ms-input-placeholder { color: var(--muted) !important; }
+        textarea::-webkit-input-placeholder { color: var(--muted) !important; }
+
+        label.form-label {
+            color: #9fb0c2;
+            font-size: 0.88rem;
+        }
+
+        /* ---------- BUTTONS ---------- */
+        .btn-success {
+            background: linear-gradient(180deg, #18a34a, #0f7f3a);
+            border: 1px solid rgba(0,0,0,0.2);
+            box-shadow: 0 6px 12px rgba(8,32,16,0.15);
+            font-weight: 600;
+        }
+        .btn-warning {
+            background: linear-gradient(180deg, #ffbf1a, var(--accent-yellow));
+            border: 1px solid rgba(0,0,0,0.14);
+            color: #0b1220;
+            font-weight: 700;
+        }
+        .btn-outline-light {
+            border-color: rgba(255,255,255,0.08);
+            color: #cfe6f5;
+        }
+
+        /* ---------- TABLES ---------- */
+        .table-dark > :not(caption) > * > * {
+            border-color: rgba(255,255,255,0.03);
+        }
+        thead th {
+            background: var(--table-head);
+            color: #d9e9f6;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        tbody tr {
+            background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+        }
+        .table td, .table th { vertical-align: middle; padding: 12px; }
+
+        /* ---------- BADGES ---------- */
+        .badge-high, .badge-med, .badge-low {
+            display: inline-block;
+            min-width: 26px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        .badge-high { background: #dc2626; }   /* red */
+        .badge-med  { background: var(--accent-orange); } /* orange */
+        .badge-low  { background: #10b981; }   /* green */
+
+        /* ---------- ROOM STATUS ---------- */
+        .room-free { color: #10b981; font-weight: 700; }
+        .room-occ  { color: #f59e0b; font-weight: 700; }
+
+        /* small helpers */
+        .small-muted { color: #9fb0c2; font-size: 0.88rem; }
+
+        /* responsive spacing */
+        @media (max-width: 992px) {
+            .container-fluid { padding: 12px; }
+            .card { margin-bottom: 14px; }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark mb-3">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            IntelliCare <span>• GeekyCoders</span>
+        </a>
+        <span class="navbar-text small-muted">
+            Smart Hospital Information System
+        </span>
+    </div>
+</nav>
+
+<div class="container-fluid">
+
+    <!-- TOP ROW: forms -->
+    <div class="row g-3 mb-3">
+        <!-- Add Patient -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">Add Patient</div>
+                <div class="card-body">
+                    <form id="patientForm" autocomplete="off">
+                        <div class="mb-2">
+                            <label class="form-label">Patient ID</label>
+                            <input type="text" class="form-control" id="p_patient_id" placeholder="e.g. P001" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" id="p_name" placeholder="Full name" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Age</label>
+                            <input type="number" class="form-control" id="p_age" placeholder="Age in years" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Gender (M/F)</label>
+                            <input type="text" maxlength="1" class="form-control" id="p_gender" placeholder="M or F" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Diagnosis</label>
+                            <input type="text" class="form-control" id="p_diagnosis" placeholder="Short diagnosis">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Save Patient</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Appointment -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">Schedule Appointment</div>
+                <div class="card-body">
+                    <form id="appointmentForm" autocomplete="off">
+                        <div class="mb-2">
+                            <label class="form-label">Patient ID</label>
+                            <input type="text" class="form-control" id="a_patient_id" placeholder="P001" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Department ID</label>
+                            <input type="number" class="form-control" id="a_department_id" placeholder="1 - Emergency, 2 - Cardiology" required>
+                            <div class="form-text small-muted">1-Emergency, 2-Cardiology, 3-Radiology, ...</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Priority (1=High, 5=Low)</label>
+                            <input type="number" min="1" max="5" class="form-control" id="a_priority" placeholder="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100">Add Appointment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Snapshot -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>System Snapshot</div>
+                    <button class="btn btn-sm btn-outline-light" id="refreshAll">Refresh All</button>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center"
+                            style="border:1px solid rgba(255,255,255,0.03); border-radius:6px; padding:10px 14px;">
+                            <span>Total Patients</span>
+                            <span id="statPatients">-</span>
+                        </li>
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center mt-2"
+                            style="border:1px solid rgba(255,255,255,0.03); border-radius:6px; padding:10px 14px;">
+                            <span>Pending Appointments</span>
+                            <span id="statAppointments">-</span>
+                        </li>
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center mt-2"
+                            style="border:1px solid rgba(255,255,255,0.03); border-radius:6px; padding:10px 14px;">
+                            <span>Occupied Rooms</span>
+                            <span id="statRoomsOcc">-</span>
+                        </li>
+                    </ul>
+
+                    <h6 class="mb-2 small-muted">Next Appointment</h6>
+                    <div id="nextAppointmentBox" class="small text-muted">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM ROW: tables -->
+    <div class="row g-3">
+        <!-- Patients table -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Patients</strong>
+                    <button class="btn btn-sm btn-outline-light" onclick="loadPatients()">Reload</button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 350px;">
+                        <table class="table table-dark table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Age</th>
+                                    <th>G</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patientsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments table -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Appointment Queue</strong>
+                    <button class="btn btn-sm btn-outline-light" onclick="loadAppointments()">Reload</button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 350px;">
+                        <table class="table table-dark table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>PID</th>
+                                    <th>Name</th>
+                                    <th>Dept</th>
+                                    <th>Prio</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointmentsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rooms table -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>Room Status</strong>
+                    <button class="btn btn-sm btn-outline-light" onclick="loadRooms()">Reload</button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive" style="max-height: 350px;">
+                        <table class="table table-dark table-striped mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Room</th>
+                                    <th>Status</th>
+                                    <th>Patient ID</th>
+                                </tr>
+                            </thead>
+                            <tbody id="roomsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ---- UTIL ----
+    function priorityBadge(priority) {
+        priority = Number(priority);
+        if (priority === 1 || priority === 2) return '<span class="badge-high">' + priority + '</span>';
+        if (priority === 3) return '<span class="badge-med">' + priority + '</span>';
+        return '<span class="badge-low">' + priority + '</span>';
+    }
+
+    // ---- LOAD PATIENTS ----
+    async function loadPatients() {
+        try {
+            const res = await fetch('/patients');
+            const data = await res.json();
+            const tbody = document.getElementById('patientsTableBody');
+            tbody.innerHTML = '';
+            data.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${p.patient_id}</td>
+                    <td>${p.name}</td>
+                    <td>${p.age}</td>
+                    <td>${p.gender}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('statPatients').textContent = data.length;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // ---- LOAD APPOINTMENTS ----
+    async function loadAppointments() {
+        try {
+            const res = await fetch('/appointments');
+            const data = await res.json();
+            const tbody = document.getElementById('appointmentsTableBody');
+            tbody.innerHTML = '';
+            data.forEach(a => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${a.patient_id}</td>
+                    <td>${a.patient_name}</td>
+                    <td>${a.department_name}</td>
+                    <td>${priorityBadge(a.priority)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('statAppointments').textContent = data.length;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // ---- LOAD ROOMS ----
+    async function loadRooms() {
+        try {
+            const res = await fetch('/rooms');
+            const data = await res.json();
+            const tbody = document.getElementById('roomsTableBody');
+            tbody.innerHTML = '';
+            let occ = 0;
+            data.forEach(r => {
+                const tr = document.createElement('tr');
+                const occupied = r.occupied === 1 || r.occupied === true || r.occupied === "1";
+                if (occupied) occ++;
+                tr.innerHTML = `
+                    <td>${r.room_number}</td>
+                    <td class="${occupied ? 'room-occ' : 'room-free'}">
+                        ${occupied ? 'Occupied' : 'Free'}
+                    </td>
+                    <td>${r.patient_id ? r.patient_id : '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('statRoomsOcc').textContent = occ;
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // ---- LOAD NEXT APPOINTMENT ----
+    async function loadNextAppointment() {
+        const box = document.getElementById('nextAppointmentBox');
+        try {
+            const res = await fetch('/appointments/next');
+            if (res.status === 404) {
+                box.textContent = "No pending appointments.";
+                return;
+            }
+            const a = await res.json();
+            box.innerHTML = `
+                <div><strong>Patient:</strong> ${a.patient_name} (${a.patient_id})</div>
+                <div><strong>Department:</strong> ${a.department_name}</div>
+                <div><strong>Priority:</strong> ${priorityBadge(a.priority)}</div>
+            `;
+        } catch (err) {
+            console.error(err);
+            box.textContent = "Error loading data.";
+        }
+    }
+
+    // ---- FORMS ----
+    document.getElementById('patientForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const body = {
+            patient_id: document.getElementById('p_patient_id').value,
+            name: document.getElementById('p_name').value,
+            age: Number(document.getElementById('p_age').value),
+            gender: document.getElementById('p_gender').value.toUpperCase(),
+            diagnosis: document.getElementById('p_diagnosis').value
+        };
+        const res = await fetch('/patients', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (res.ok) {
+            alert('Patient added');
+            e.target.reset();
+            loadPatients();
+        } else {
+            alert('Error adding patient');
+        }
+    });
+
+    document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const body = {
+            patient_id: document.getElementById('a_patient_id').value,
+            department_id: Number(document.getElementById('a_department_id').value),
+            priority: Number(document.getElementById('a_priority').value)
+        };
+        const res = await fetch('/appointments', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (res.ok) {
+            alert('Appointment added');
+            e.target.reset();
+            loadAppointments();
+            loadNextAppointment();
+        } else {
+            alert('Error adding appointment');
+        }
+    });
+
+    // ---- REFRESH ALL BUTTON ----
+    document.getElementById('refreshAll').addEventListener('click', () => {
+        loadPatients();
+        loadAppointments();
+        loadRooms();
+        loadNextAppointment();
+    });
+
+    // ---- INITIAL LOAD ----
+    loadPatients();
+    loadAppointments();
+    loadRooms();
+    loadNextAppointment();
+</script>
+</body>
+</html>
