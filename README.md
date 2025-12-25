@@ -212,7 +212,7 @@ Dashboard displays:
 
 ---
 
-## 🔹 Demo Tip for Judges (You Can Say This)
+## 🔹 Demo Tip for Judges
 
 > “We first designed the hospital logic using C and data structures.
 > Once validated, we scaled the same logic into a real-time Hospital Information System using Flask, MySQL, and a dashboard.
