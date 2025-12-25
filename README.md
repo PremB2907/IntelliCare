@@ -1,32 +1,93 @@
 # 🏥 IntelliCare – Smart Hospital Information System
 
-**Team:** GeekyCoders
+**Team Name:** GeekyCoders
 **Problem Statement:** PS03 – Hospital Information System
 **Hackathon:** Quasar 4.0
+**College:** Shah & Anchor Kutchhi Engineering College
 
 ---
 
-## 🔹 Overview
+## 🔹 Project Overview
 
-IntelliCare is a **unified Hospital Information System (HIS)** that digitizes core OPD/IPD workflows and provides a **real-time dashboard** for managing patients, appointments, rooms, and departments.
+**IntelliCare** is a **unified Hospital Information System (HIS)** that digitizes core OPD/IPD workflows and provides hospitals with a **real-time 360° operational view** of patients, appointments, rooms, and departments.
 
-The system is designed in two phases:
-
-* **Phase 1:** Core logic using Data Structures in C (DSAA prototype)
-* **Phase 2:** Scaled, production-style web system using Flask + MySQL + Dashboard
+The system reduces manual work, removes departmental gaps, and improves emergency response using **data-structure-driven logic** and a **web-based dashboard**.
 
 ---
 
-## 🔹 System Requirements (Judge Side)
+## 🔹 Design Philosophy
 
-Minimum requirements to test the system:
+The project was built in **two phases**:
 
-* Windows / Linux / macOS
-* **Python 3.9+**
-* **XAMPP** (Apache + MySQL)
-* Web browser (Chrome / Edge)
+### Phase 1 – Algorithm & Logic Design
 
-> ⚠️ No internet required during demo (all local).
+* Implemented using **C (DSAA)**
+* Focused on correctness and efficiency
+* Data Structures used:
+
+  * Linked List → Patient records
+  * Priority Queue → Appointment scheduling
+  * Graph + BFS → Department navigation
+
+### Phase 2 – Production-Style HIS
+
+* Same logic scaled into a real system
+* Backend APIs using **Python Flask**
+* Database using **MySQL (XAMPP)**
+* Web dashboard using **HTML, CSS, Bootstrap**
+
+This approach ensures **algorithmic depth + real-world usability**.
+
+---
+
+## 🔹 Key Features (PS03 Aligned)
+
+* Centralized patient registration
+* Priority-based appointment scheduling (emergency-first)
+* OPD + IPD workflow support
+* Room allocation and vacating
+* Real-time dashboard statistics
+* Department navigation using **BFS (Graph traversal)**
+* Modular and analytics-ready architecture
+
+---
+
+## 🔹 Technology Stack
+
+**Core Logic**
+
+* C Programming
+* Data Structures & Algorithms
+
+**Backend**
+
+* Python Flask
+* REST APIs
+
+**Database**
+
+* MySQL (XAMPP)
+
+**Frontend**
+
+* HTML
+* CSS
+* Bootstrap
+
+**Architecture**
+
+* API-driven
+* Modular
+* Scalable
+
+---
+
+## 🔹 System Requirements (For Judges)
+
+* Python 3.9 or higher
+* XAMPP (Apache + MySQL)
+* Any modern web browser
+* No internet required during demo
 
 ---
 
@@ -38,8 +99,9 @@ IntelliCare/
 ├── app.py                     # Flask backend (APIs + BFS logic)
 ├── templates/
 │   └── index.html              # Dashboard UI
+├── intellicare_his.sql         # Complete database setup
 ├── README.md                   # This file
-└── (optional) c_prototype/     # DSAA C-based logic (Phase 1)
+└── c_prototype/ (optional)     # DSAA logic in C (Phase 1)
 ```
 
 ---
@@ -51,38 +113,38 @@ IntelliCare/
    * Start **Apache**
    * Start **MySQL**
 
-2. Open browser →
-   `http://localhost/phpmyadmin`
-
-3. Create database:
+2. Open browser:
 
    ```
-   intellicare_his
+   http://localhost/phpmyadmin
    ```
 
-4. Required tables:
+3. Click **Import**
 
-   * `patients`
-   * `appointments`
-   * `rooms`
-   * `departments`
-   * `department_edges`
+4. Upload:
 
-*(Tables are created using SQL scripts provided in documentation / setup notes.)*
+   ```
+   intellicare_his.sql
+   ```
 
-5. Insert:
+5. Click **Go**
 
-   * Departments (Emergency, Cardiology, Radiology, etc.)
-   * Rooms (e.g., room numbers 101–120, occupied = 0)
-   * Department graph edges (for BFS navigation)
+✔ Database
+✔ Tables
+✔ Departments
+✔ Rooms
+✔ BFS graph
+✔ Sample data
+
+All created automatically.
 
 ---
 
-## 🔹 How to Run the System (Judges)
+## 🔹 How to Run the System
 
 ### Step 1: Start Backend
 
-Open terminal in project folder and run:
+Open terminal in project folder:
 
 ```bash
 python app.py
@@ -104,123 +166,92 @@ Open browser and visit:
 http://127.0.0.1:5000/
 ```
 
-The **IntelliCare Dashboard** will load.
+---
+
+## 🔹 How Judges Can Test the System (Demo Flow)
+
+### 1️⃣ Patient Registration
+
+* Use **Add Patient**
+* Enter details and save
+* Patient appears in Patients table instantly
+
+✔ Tests patient digitization
 
 ---
 
-## 🔹 How Judges Can Test Features (Demo Flow)
+### 2️⃣ Appointment Scheduling (Priority Queue)
 
-### ✅ 1. Patient Registration
+* Schedule appointment
+* Assign department and priority (1 = emergency)
+* Queue auto-orders by priority
 
-* Go to **Add Patient**
-* Enter Patient ID, Name, Age, Gender, Diagnosis
-* Click **Save Patient**
-* Patient appears instantly in **Patients Table**
-
-✔ Tests patient record digitization
+✔ Tests emergency-first logic
 
 ---
 
-### ✅ 2. Appointment Scheduling (Priority Queue)
+### 3️⃣ Appointment Queue & Next Appointment
 
-* Go to **Schedule Appointment**
-* Enter Patient ID
-* Enter Department ID
-* Set Priority (1 = Emergency, 5 = Normal)
-* Click **Add Appointment**
+* View sorted appointment queue
+* Observe **Next Appointment** panel
 
-✔ Appointments auto-sorted by **priority + time**
+✔ Tests real-time scheduling
 
 ---
 
-### ✅ 3. Real-Time Appointment Queue
+### 4️⃣ Room Allocation (IPD)
 
-* Scroll to **Appointment Queue**
-* Observe priority badges (High / Medium / Low)
-* Check **Next Appointment** panel
+* Assign room to patient
+* Room becomes occupied
+* Vacate room to free it
 
-✔ Demonstrates emergency-first logic
-
----
-
-### ✅ 4. Room Allocation (IPD)
-
-* Enter Patient ID → click **Assign Room**
-
-* First available room is allocated
-
-* Room status updates instantly
-
-* Enter Room Number → click **Vacate**
-
-* Room becomes free
-
-✔ Tests IPD room management
+✔ Tests IPD management
 
 ---
 
-### ✅ 5. Department Navigation (Graph + BFS)
+### 5️⃣ Department Navigation (Graph + BFS)
 
-* Select a department from dropdown
-* Click **Run BFS**
-* BFS traversal path is displayed visually
+* Select starting department
+* Run BFS
+* Traversal path is displayed visually
 
-✔ Demonstrates graph traversal for hospital navigation
+✔ Tests graph-based navigation
 
 ---
 
-### ✅ 6. System Snapshot (360° View)
+### 6️⃣ System Snapshot (360° View)
 
-Dashboard displays:
+Dashboard shows:
 
 * Total patients
 * Pending appointments
 * Occupied rooms
-* Live updates via **Refresh All**
+* Live updates using **Refresh All**
 
-✔ Real-time hospital visibility
-
----
-
-## 🔹 Technology Stack
-
-**Core Logic (Phase 1):**
-
-* C Programming
-* Data Structures:
-
-  * Linked List
-  * Priority Queue
-  * Graph (BFS)
-
-**Production System (Phase 2):**
-
-* Backend: **Python Flask**
-* Database: **MySQL (XAMPP)**
-* Frontend: **HTML, CSS, Bootstrap**
-* Architecture: REST APIs + Dashboard
+✔ Tests real-time hospital visibility
 
 ---
 
 ## 🔹 Why This Solves PS03
 
-* ✔ Unified Hospital Information System
-* ✔ Digitizes OPD/IPD workflows
-* ✔ Real-time 360° view of patients & resources
-* ✔ Reduces manual work & departmental gaps
-* ✔ Scalable, modular, analytics-ready
+* Unified Hospital Information System
+* Digitizes OPD/IPD workflows
+* Provides real-time operational data
+* Reduces manual work and departmental gaps
+* Scalable and modular for future hospital needs
 
 ---
 
-## 🔹 Demo Tip for Judges
+## 🔹 Demo Explanation 
 
-> “We first designed the hospital logic using C and data structures.
-> Once validated, we scaled the same logic into a real-time Hospital Information System using Flask, MySQL, and a dashboard.
-> This ensures both algorithmic correctness and real-world usability.”
+> “We first designed the hospital workflow logic using C and data structures to ensure correctness.
+> After validating the logic, we scaled it into a real-time Hospital Information System using Flask, MySQL, and a dashboard.
+> This ensures both strong algorithmic design and practical usability.”
 
 ---
 
 ## 🔹 Conclusion
 
-IntelliCare demonstrates how **data structures + system design** can be transformed into a **practical, deployable Hospital Information System**, fully aligned with PS03 requirements.
+**IntelliCare** demonstrates how core **computer science fundamentals** can be transformed into a **deployable, real-world Hospital Information System**, fully aligned with PS03 objectives.
 
+---
